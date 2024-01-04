@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
-func main() {
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
-    })
+func greet(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World! %s", time.Now())
+}
 
-    http.ListenAndServe(":80", nil)
+func main() {
+	http.HandleFunc("/", greet)
+	http.ListenAndServe(":8080", nil)
 }
