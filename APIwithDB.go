@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 type Course struct {
@@ -245,7 +247,14 @@ func SetupRoutes(apiBasePath string) {
 // ** connect to DB "mysql", "id:password@(localhost)/dbName"
 func SetupDB() {
 	var err error
-	Db, err = sql.Open("mysql", "root:@(127.0.0.1:3306)/coursedb")
+	// ** use .env for secret and use .gitignore .env
+	err = godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	dbConnectionString := os.Getenv("DB_CONNECTION")
+	Db, err = sql.Open("mysql", dbConnectionString)
 
 	if err != nil {
 		log.Fatal(err)
